@@ -2,9 +2,9 @@ import './styles.css';
 
 import Header from '../Header';
 
-const Main = () => (
+const Main = (props) => (
   <>
-    <Header />
+    <Header {...props} />
     <main className="content">
       Content
     </main>

@@ -1,8 +1,12 @@
 import './styles.css';
 
+import logo from '../../../assets/images/logo.png';
+
 const Logo = () => (
   <aside className="logo">
-    Logo
+    <a href="/">
+      <img src={logo} alt="Logo" />
+    </a>
   </aside>
 );
 

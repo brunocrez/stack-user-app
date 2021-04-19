@@ -1,9 +1,9 @@
 import './styles.css';
 
-const Header = () => (
-  <header className="header">
-    Header
-  </header>
+const Nav = () => (
+  <aside className="menu-area">
+    Nav
+  </aside>
 );
 
-export default Header;
+export default Nav;
