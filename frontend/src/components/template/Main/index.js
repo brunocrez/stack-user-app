@@ -5,9 +5,9 @@ import Header from '../Header';
 const Main = () => (
   <>
     <Header />
-    <div className="content">
+    <main className="content">
       Content
-    </div>
+    </main>
   </>
 );
 
