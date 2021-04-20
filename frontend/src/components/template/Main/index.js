@@ -5,8 +5,10 @@ import Header from '../Header';
 const Main = (props) => (
   <>
     <Header {...props} />
-    <main className="content">
-      Content
+    <main className="content container-fluid">
+      <div className="p-3 mt-3">
+        {props.children}
+      </div>
     </main>
   </>
 );
