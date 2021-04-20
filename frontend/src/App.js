@@ -5,17 +5,14 @@ import './App.css';
 
 import Logo from './components/template/Logo';
 import Nav from './components/template/Nav';
-import Main from './components/template/Main';
+import Home from './components/Home';
 import Footer from './components/template/Footer';
 
 const App = () => (  
   <div className="app">
     <Logo />
     <Nav />
-    <Main
-      icon="home"
-      title="Início"
-      subtitle="Gerenciamento de Usuários utilizando React" />
+    <Home />
     <Footer />
   </div>
 )
