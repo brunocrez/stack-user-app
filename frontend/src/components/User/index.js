@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import Main from '../template/Main';
@@ -11,65 +11,52 @@ const headerProps = {
   subtitle: 'Cadastro de Usuários: Listar, Incluir, Alterar e Excluir'
 }
 
-const initialState = {
-  user: { name: '', email: '' },
-  list: []
-}
+const User = () => {
 
-export default class User extends Component {
-  
-  constructor(props) {
-    super(props);
-    this.clear = this.clear.bind(this);
-    this.save = this.save.bind(this);
-  }
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [list, setList] = useState([]);
 
-  state = { ...initialState };
+  useEffect(() => {
+    refresh();
+  }, [])
 
-  componentDidMount() {
-    this.refresh();
-  }
-
-  refresh() {
+  function refresh() {
     axios
       .get(BASE_URL)
-      .then(res => this.setState({ list: res.data }));
+      .then(res => setList(res.data));
   }
 
-  clear() {
-    this.setState({ user: initialState.user });
+  function clear() {
+    setName('');
+    setEmail('');
   }
 
-  save() {
-    const user = this.state.user;
+  function saveUser() {
+    const user = { name, email };
     const currentAction = user.id ? 'put' : 'post';
     const url = user.id ? `${BASE_URL}/${user.id}` : BASE_URL;
 
     axios[currentAction](url, user)
-      .then(res => {
-        this.setState({ user: initialState.user });
-        this.refresh();
+      .then(() => {
+        clear();
+        refresh();
       })
   }
 
-  updateField(e) {
-    const user = { ...this.state.user };
-    user[e.target.name] = e.target.value;
-    this.setState({ user });
+  function loadUser(user) {
+    setName(user.name);
+    setEmail(user.email);
   }
 
-  loadUser(user) {
-    this.setState({ user });
-  }
-
-  removeUser(user) {
+  function removeUser(user) {
     axios
       .delete(`${BASE_URL}/${user.id}`)
-      .then(() => this.refresh())
+      .then(() => refresh())
   }
 
-  renderForm() {
-    return (
+  return (
+    <Main {...headerProps}>
       <div className="form">
         <div className="row">
           <div className="col-12 col-md-6">
@@ -78,9 +65,8 @@ export default class User extends Component {
               <input
                 type="text"
                 className="form-control"
-                name="name"
-                value={this.state.user.name}
-                onChange={e => this.updateField(e)}
+                value={name}
+                onChange={e => setName(e.target.value)}
                 placeholder="Digite o Nome" />
             </div>
           </div>
@@ -91,9 +77,8 @@ export default class User extends Component {
               <input
                 type="text"
                 className="form-control"
-                name="email"
-                value={this.state.user.email}
-                onChange={e => this.updateField(e)}
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 placeholder="Digite o E-mail" />
             </div>
           </div>
@@ -105,22 +90,18 @@ export default class User extends Component {
           <div className="col-12 d-flex justify-content-end">
             <button
               className="btn btn-primary"
-              onClick={this.save}>
+              onClick={saveUser}>
               Salvar
             </button>
             <button
               className="btn btn-secondary ml-2"
-              onClick={this.clear}>
+              onClick={clear}>
               Cancelar
             </button>
           </div>
         </div>      
       </div>
-    );
-  }
 
-  renderTable() {
-    return (
       <table className="table mt-4">
         <thead>
           <tr>
@@ -130,39 +111,28 @@ export default class User extends Component {
           </tr>
         </thead>
         <tbody>
-          {this.renderRows()}
+          {list.map(el => (
+            <tr key={el.id}>
+              <td>{el.name}</td>
+              <td>{el.email}</td>
+              <td>
+                <button
+                  className="btn btn-warning mr-1"
+                  onClick={() => loadUser(el)}>
+                  <i className="fa fa-pencil"></i>
+                </button>
+                <button
+                  className="btn btn-danger ml-1"
+                  onClick={() => removeUser(el)}>
+                  <i className="fa fa-trash-o"></i>
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
-    );
-  }
-
-  renderRows() {
-    return this.state.list.map(el => (
-      <tr key={el.id}>
-        <td>{el.name}</td>
-        <td>{el.email}</td>
-        <td>
-          <button
-            className="btn btn-warning mr-1"
-            onClick={() => this.loadUser(el)}>
-            <i className="fa fa-pencil"></i>
-          </button>
-          <button
-            className="btn btn-danger ml-1"
-            onClick={() => this.removeUser(el)}>
-            <i className="fa fa-trash-o"></i>
-          </button>
-        </td>
-      </tr>
-    ));
-  }
-
-  render() {
-    return (
-      <Main {...headerProps}>
-        {this.renderForm()}
-        {this.renderTable()}
-      </Main>
-    );
-  }
+    </Main>
+  );
 }
+
+export default User;
