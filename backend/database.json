@@ -9,6 +9,11 @@
       "id": 2,
       "name": "Thais Rezende",
       "email": "thaislima@email.com"
+    },
+    {
+      "name": "Rones",
+      "email": "rones@email.com",
+      "id": 3
     }
   ]
 }
